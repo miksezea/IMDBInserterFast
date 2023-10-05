@@ -7,16 +7,10 @@ using System.Data.SqlClient;
 
 namespace IMDBConsole
 {
-    public class NormalInserter
-    {
-        private readonly string ConnString = "server=localhost; database=MyIMDB;" +
-            "user id=sa; password=bibliotek; TrustServerCertificate=True";
-        
-        public void InsertData(List<Title> titles)
+    public class NormalInserter : IInserter
+    {     
+        public void InsertData(SqlConnection sqlConn, List<Title> titles)
         {
-            SqlConnection sqlConn = new SqlConnection(ConnString);
-            sqlConn.Open();
-
             foreach (Title title in titles)
             {
                 SqlCommand sqlCommand = new SqlCommand(
@@ -31,7 +25,8 @@ namespace IMDBConsole
                 try
                 {
                     sqlCommand.ExecuteNonQuery();
-                } catch (Exception ex)
+                } 
+                catch (Exception ex)
                 {
                     Console.WriteLine(sqlCommand.CommandText);
                 }

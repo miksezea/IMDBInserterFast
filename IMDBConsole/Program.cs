@@ -24,13 +24,46 @@ foreach (string line in
 
 Console.WriteLine(titles.Count);
 
+Console.WriteLine("Hva' vil du?");
+Console.WriteLine("1: Delete all");
+Console.WriteLine("2: Normal insert");
+Console.WriteLine("3: Prepared insert");
+Console.WriteLine("4: Bulked insert");
+
+string input = Console.ReadLine();
+
 DateTime before = DateTime.Now;
 
 SqlConnection sqlConn = new SqlConnection(ConnString);
 sqlConn.Open();
 
-IInserter myInserter = new PreparedInserter();
-myInserter.InsertData(sqlConn, titles);
+IInserter? myInserter = null;
+
+switch (input)
+{
+    case "1":
+        Console.WriteLine("Deleting all...");
+        SqlCommand cmd = new SqlCommand("DELETE FROM Titles", sqlConn);
+        cmd.ExecuteNonQuery();
+        break;
+    case "2":
+        Console.WriteLine("Inserting data...");
+        myInserter = new NormalInserter();
+        break;
+    case "3":
+        Console.WriteLine("Inserting data...");
+        myInserter = new PreparedInserter();
+        break;
+    case "4":
+        Console.WriteLine("Inserting data...");
+        myInserter = new BulkInserter();
+        break;
+}
+
+if (myInserter != null)
+{
+    myInserter.InsertData(sqlConn, titles);
+}
 
 sqlConn.Close();
 

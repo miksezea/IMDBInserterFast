@@ -11,7 +11,7 @@ namespace IMDBConsole
     {
         public void InsertData(SqlConnection sqlConn, List<Title> titles)
         {
-            SqlCommand sqlComm = new SqlCommand("" +
+            SqlCommand sqlCmd = new SqlCommand("" +
                         "INSERT INTO [dbo].[Titles]" +
                         "([tconst],[titleType],[primaryTitle],[originalTitle]" +
                         ",[isAdult],[startYear],[endYear],[runTimeMinutes])" +
@@ -27,37 +27,39 @@ namespace IMDBConsole
                         , sqlConn);
             SqlParameter tconstParameter = new SqlParameter("@tconst",
                 System.Data.SqlDbType.VarChar, 10);
-            sqlComm.Parameters.Add(tconstParameter);
+            sqlCmd.Parameters.Add(tconstParameter);
 
             SqlParameter titleTypeParameter = new SqlParameter("@titleType",
                 System.Data.SqlDbType.VarChar, 50);
-            sqlComm.Parameters.Add(titleTypeParameter);
+            sqlCmd.Parameters.Add(titleTypeParameter);
 
             SqlParameter primaryTitleParameter = new SqlParameter("@primaryTitle",
                 System.Data.SqlDbType.VarChar, 8000);
-            sqlComm.Parameters.Add(primaryTitleParameter);
+            sqlCmd.Parameters.Add(primaryTitleParameter);
 
             SqlParameter originalTitleParameter = new SqlParameter("@originalTitle",
                 System.Data.SqlDbType.VarChar, 8000);
-            sqlComm.Parameters.Add(originalTitleParameter);
+            sqlCmd.Parameters.Add(originalTitleParameter);
 
             SqlParameter isAdultParameter = new SqlParameter("@isAdult",
                 System.Data.SqlDbType.Bit);
-            sqlComm.Parameters.Add(isAdultParameter);
+            sqlCmd.Parameters.Add(isAdultParameter);
 
             SqlParameter startYearParameter = new SqlParameter("@startYear",
                 System.Data.SqlDbType.Int);
-            sqlComm.Parameters.Add(startYearParameter);
+            sqlCmd.Parameters.Add(startYearParameter);
 
             SqlParameter endYearParameter = new SqlParameter("@endYear",
                 System.Data.SqlDbType.Int);
-            sqlComm.Parameters.Add(endYearParameter);
+            sqlCmd.Parameters.Add(endYearParameter);
 
             SqlParameter runtimeMinutesParameter = new SqlParameter("@runtimeMinutes",
                 System.Data.SqlDbType.Int);
-            sqlComm.Parameters.Add(runtimeMinutesParameter);
+            sqlCmd.Parameters.Add(runtimeMinutesParameter);
 
-            sqlComm.Prepare();
+            sqlCmd.Prepare();
+
+            int counter = 0;
 
             foreach (Title title in titles)
             {
@@ -71,14 +73,17 @@ namespace IMDBConsole
                 FillParameter(runtimeMinutesParameter, title.runtimeMinutes);
                 try
                 {
-                    sqlComm.ExecuteNonQuery();
+                    sqlCmd.ExecuteNonQuery();
+                    counter++;
+                    Console.WriteLine(counter + "...");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    Console.WriteLine(sqlComm.CommandText);
+                    Console.WriteLine(sqlCmd.CommandText);
                     Console.ReadKey();
                 }
+
             }
         }
 
